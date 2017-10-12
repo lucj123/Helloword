@@ -1,0 +1,63 @@
+采用HttpPost和HttpGet来封装post请求和get请求 ，再使用HttpClient的excute方法发送Post或者get请求并返回服务器的响应数据
+（1）设置连接和读取超时时间，并新建HttpClient对象。
+//设置连接超时时间和数据读取超时时间
+HttpParams httpParams=new BasicHttpParams();
+HttpConnectionParmams.setConnectionTimeout(httpParams,KeySouce.CONNECTION_TIMEOUT_INT);
+HttpConnectionParmams.setConnectionTimeout(httpParams,KeySouce.SO_TIMEOUT_INT);
+//新建HttpClient对象
+HttpClient httpClient=new DefaultHttpClient(httpParams);
+(2)实现Get请求
+HttpGet get=new HttpGet(url);
+if(headers!=null)
+{set<String>setHead=headers.keySet();
+Iterator<String>iteratorHead=setHead.iterator();
+while(iteratorHead.hasNext())
+ {String headerName=iteratorHead.next();
+  String headerValue=(String)headers.get(headerName);
+  MyLog.d(headerName,headerValue);
+  Get.setHeader(headerName,headerValue);
+
+ }
+
+}
+response=httpClient.execute(get);
+(3)实现post发送请求处理
+HttpPost post=new HttpPost(KeySouce.HOST_URL_STR);
+Map<String,String>headers=heads;
+Set<String>setHead=headers.keySet();
+Iterator<String>iteratorHead=setHead.iterator()
+while(iteratorHead.hasNext())
+{
+  String headName=iteratorHead.next();
+  String headerValue=(String)headers.get(headerName);
+  Post.setHeader(headerName,headerValue);
+}
+// http实体需要在执行上下文时动态生成 
+HttpClient提供使用EnityTemplate实体类和ContentProducer接口支持动态实体  
+内容制作是通过写需求的内容到一个输出流，每次请求是都会产生
+因此通过EnityTemplate实体类创建的实体通常是独立的，重复性好
+ContentProducer cp =new CotentProducer()
+{
+public void writeTo(OutputStream outstream)
+      throws IOExpection
+{
+  Writer writer=new OutputStreamWriter(outstream,"UTF-8");
+  writer.writer(requsetBody);
+  writer.flush();
+  writer.close();
+
+}
+  HttpEntity entity=new EntityTemplate(cp);
+  post.setEntity(entity);
+}
+response=httpClient.execute(post);
+(4) 通过Response 响应请求
+if (response.getStatusLine().getStatusCode()==200)
+{
+byte[] bResultXml=EntityUtils.toByteArray(response.getEntity());
+if(bResultXml!=null)
+
+{
+String strXml=new string(bResultXml,"utf-8");
+}
+}
